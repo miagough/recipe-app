@@ -1,10 +1,11 @@
+import mu.KotlinLogging
 import utils.ScannerInput
 import java.lang.System.exit
 
 
 
 
-
+private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
     runMenu()
@@ -42,23 +43,23 @@ fun runMenu() {
     } while (true)
 }
 
-fun addRecipe(){
-    println("You chose Add Recipe")
+fun addRecipe() {
+    logger.info { "addRecipe() function invoked" }
 }
 
-fun listRecipes(){
-    println("You chose List Recipes")
+fun listRecipes() {
+    logger.info { "listRecipes() function invoked" }
 }
 
-fun updateRecipe(){
-    println("You chose Update Recipe")
+fun updateRecipe() {
+    logger.info { "updateRecipe() function invoked" }
 }
 
-fun deleteRecipe(){
-    println("You chose Delete Recipe")
+fun deleteRecipe() {
+    logger.info { "deleteRecipe() function invoked" }
 }
 
-fun exitApp(){
+fun exitApp() {
     println("Exiting...Goodbye")
     exit(0)
 }
