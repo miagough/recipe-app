@@ -1,11 +1,16 @@
+import controllers.RecipeAPI
+import models.Recipe
 import mu.KotlinLogging
 import utils.ScannerInput
+import utils.ScannerInput.readNextInt
+import utils.ScannerInput.readNextLine
 import java.lang.System.exit
 
 
 
 
 private val logger = KotlinLogging.logger {}
+private val recipeAPI = RecipeAPI()
 
 fun main(args: Array<String>) {
     runMenu()
@@ -44,11 +49,25 @@ fun runMenu() {
 }
 
 fun addRecipe() {
-    logger.info { "addRecipe() function invoked" }
+    //logger.info { "addRecipe() function invoked" }
+    val recipeName = readNextLine("Enter recipe name: ")
+    val recipeCategory = readNextLine("Enter a category for your recipe: ")
+    val ingredients = readNextLine("Enter the ingredients needed: ")
+    val difficultyLevel = readNextInt("Enter a difficulty level (1-easy, 2, 3, 4, 5-very difficult): ")
+    val servingSize = readNextInt("Enter the serving size: ")
+    val recipeRating = readNextInt("Rate this dish (1-not good, 2, 3, 4, 5-excellent): ")
+    val isAdded = recipeAPI.add(Recipe(recipeName,recipeCategory,ingredients,difficultyLevel,servingSize,recipeRating, false))
+
+    if (isAdded) {
+        println("Added Successfully")
+    }else {
+        println("Add Failed")
+    }
 }
 
 fun listRecipes() {
-    logger.info { "listRecipes() function invoked" }
+    //logger.info { "listRecipes() function invoked" }
+    println(recipeAPI.listAllRecipes())
 }
 
 fun updateRecipe() {
