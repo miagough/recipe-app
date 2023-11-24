@@ -3,10 +3,14 @@ package controllers
 
 import models.Recipe
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+
+
 class RecipeAPITest {
 
     private var americanPancakes: Recipe? = null
@@ -48,21 +52,44 @@ class RecipeAPITest {
         emptyRecipes = null
     }
 
-    @Test
-    fun `adding a Recipe to a populated list adds to ArrayList`(){
-        val newRecipe = Recipe("American -style Pancakes", "Breakfast", "flour,sugar,eggs,butter,milk", 1, 4, 5, false)
-        assertEquals(6,populatedRecipes!!.numberOfRecipes())
-        assertTrue(populatedRecipes!!.add(newRecipe))
-        assertEquals(7, populatedRecipes!!.numberOfRecipes())
-        assertEquals(newRecipe, populatedRecipes!!.findRecipe(populatedRecipes!!.numberOfRecipes() - 1))
-    }
+    @Nested
+    inner class AddRecipes {
+        @Test
+        fun `adding a Recipe to a populated list adds to ArrayList`() {
+            val newRecipe =
+                Recipe("American -style Pancakes", "Breakfast", "flour,sugar,eggs,butter,milk", 1, 4, 5, false)
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            assertTrue(populatedRecipes!!.add(newRecipe))
+            assertEquals(7, populatedRecipes!!.numberOfRecipes())
+            assertEquals(newRecipe, populatedRecipes!!.findRecipe(populatedRecipes!!.numberOfRecipes() - 1))
+        }
 
-    @Test
-    fun `adding a Recipe to an empty list adds to ArrayList`(){
-        val newRecipe = Recipe("American -style Pancakes", "Breakfast", "flour,sugar,eggs,butter,milk", 1, 4, 5, false)
-        assertEquals(0, emptyRecipes!!.numberOfRecipes())
-        assertTrue(emptyRecipes!!.add(newRecipe))
-        assertEquals(1, emptyRecipes!!.numberOfRecipes())
-        assertEquals(newRecipe, emptyRecipes!!.findRecipe(emptyRecipes!!.numberOfRecipes() - 1))
+        @Test
+        fun `adding a Recipe to an empty list adds to ArrayList`() {
+            val newRecipe =
+                Recipe("American -style Pancakes", "Breakfast", "flour,sugar,eggs,butter,milk", 1, 4, 5, false)
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.add(newRecipe))
+            assertEquals(1, emptyRecipes!!.numberOfRecipes())
+            assertEquals(newRecipe, emptyRecipes!!.findRecipe(emptyRecipes!!.numberOfRecipes() - 1))
+        }
+
+        @Test
+        fun `listAllRecipes returns No Recipes Stored message when ArrayList is empty`() {
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.listAllRecipes().lowercase().contains("no recipes"))
+        }
+
+        @Test
+        fun `listAllRecipes returns Recipes when ArrayList has notes stored`() {
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            val recipesString = populatedRecipes!!.listAllRecipes().lowercase()
+            assertFalse(recipesString.contains("American -style Pancakes"))
+            assertFalse(recipesString.contains("Overnight Oats"))
+            assertFalse(recipesString.contains("Salmon Salad"))
+            assertFalse(recipesString.contains("Cauliflower Soup"))
+            assertFalse(recipesString.contains("Lasagne"))
+            assertFalse(recipesString.contains("Pasta Bake"))
+        }
     }
 }
