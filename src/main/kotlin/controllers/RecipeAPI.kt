@@ -20,4 +20,19 @@ class RecipeAPI {
             listOfRecipes
         }
     }
+
+    fun numberOfRecipes(): Int {
+        return recipes.size
+    }
+
+    fun findRecipe(index: Int): Recipe? {
+        return if (isValidListIndex(index, recipes)){
+            recipes[index]
+        }else null
+    }
+
+    //utility method to determine if an index is valid in a list.
+    fun isValidListIndex(index: Int, list: List<Any>): Boolean {
+        return (index >= 0 && index < list.size)
+    }
 }
