@@ -49,6 +49,36 @@ class RecipeAPI {
         }
     }
 
+    fun listRecipesBySpecifiedRating(rating: Int): String {
+        return if (recipes.isEmpty())
+        {
+            "No recipes stored"
+        }else{
+            var listOfRecipes = ""
+            for (i in recipes.indices){
+                if (recipes [i].recipeRating == rating){
+                    listOfRecipes +=
+                        """$i: ${recipes[i]}
+                        """.trimIndent()
+                }
+            }
+            if (listOfRecipes.equals("")) {
+                "No recipes with rating: $rating"
+            }else{
+                "${numberOfRecipesByRating(rating)} recipes with rating $rating: $listOfRecipes"
+            }
+        }
+        }
+
+    fun numberOfRecipesByRating(rating: Int): Int{
+        var counter = 0
+        for (recipe in recipes) {
+            if (recipe.recipeRating == rating){
+                counter++
+            }
+        }
+        return counter
+    }
     fun numberOfRecipes(): Int {
         return recipes.size
     }
