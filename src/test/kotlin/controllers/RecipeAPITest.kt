@@ -28,7 +28,7 @@ class RecipeAPITest {
         americanPancakes = Recipe("American -style Pancakes","Breakfast","flour,sugar,milk,eggs,butter",1,4,5, false)
         overnightOats = Recipe("Overnight Oats","Breakfast","oats,yoghurt,berries,honey,cinnamon",1,1,4, false)
         salmonSalad = Recipe("Salmon Salad","Lunch","salmon,potatoes,salad leaves",2,2,5, true)
-        cauliflowerSoup = Recipe("Cauliflower Soup","Lunch","cauliflower,cream,garlic,onion,celery",3,6,4, false)
+        cauliflowerSoup = Recipe("Cauliflower Soup","Lunch","cauliflower,cream,garlic,onion,celery",3,6,1, false)
         lasagne = Recipe("Lasagne","Dinner","mince meat,milk,cheese,pasta sheets,tomato sauce",2,4,4, true)
         pastaBake = Recipe("Pasta Bake","Dinner","pasta,chicken,cheese",1,6,5, false)
 
@@ -130,5 +130,45 @@ class RecipeAPITest {
         assertFalse(archivedRecipesString.contains("cauliflower soup"))
         assertTrue(archivedRecipesString.contains("lasagne"))
         assertFalse(archivedRecipesString.contains("pasta bake"))
+    }
+
+    @Test
+    fun `listRecipesBySpecifiedRating returns No Recipes when ArrayList is empty`() {
+        assertEquals(0, emptyRecipes!!.numberOfRecipes())
+        assertTrue(emptyRecipes!!.listRecipesBySpecifiedRating(1).lowercase().contains("no recipes")
+        )
+    }
+
+    @Test
+    fun `listRecipesBySpecifiedRating returns no recipes when no recipes with that rating exist`() {
+        assertEquals(6, populatedRecipes!!.numberOfRecipes())
+        val rating2String = populatedRecipes!!.listRecipesBySpecifiedRating(2).lowercase()
+        assertTrue(rating2String.contains("no recipes"))
+        assertTrue(rating2String.contains("2"))
+    }
+
+    @Test
+    fun `listRecipesBySpecifiedRating returns all recipes that match that rating when recipes with that rating exist`() {
+        assertEquals(6, populatedRecipes!!.numberOfRecipes())
+        val rating1String = populatedRecipes!!.listRecipesBySpecifiedRating(1).lowercase()
+        assertTrue(rating1String.contains("1 recipe"))
+        assertTrue(rating1String.contains("rating 1"))
+        assertFalse(rating1String.contains("american -style pancakes"))
+        assertFalse(rating1String.contains("overnight oats"))
+        assertFalse(rating1String.contains("salmon salad"))
+        assertTrue(rating1String.contains("cauliflower soup"))
+        assertFalse(rating1String.contains("lasagne"))
+        assertFalse(rating1String.contains("pasta bake"))
+
+
+        val rating4String = populatedRecipes!!.listRecipesBySpecifiedRating(4).lowercase(Locale.getDefault())
+        assertTrue(rating4String.contains("2 recipe"))
+        assertTrue(rating4String.contains("rating 4"))
+        assertFalse(rating4String.contains("american -style pancakes"))
+        assertTrue(rating4String.contains("overnight oats"))
+        assertFalse(rating4String.contains("salmon salad"))
+        assertFalse(rating4String.contains("cauliflower soup"))
+        assertTrue(rating4String.contains("lasagne"))
+        assertFalse(rating4String.contains("pasta bake"))
     }
 }
