@@ -21,8 +21,56 @@ class RecipeAPI {
         }
     }
 
+    fun listRecipesNotInBook(): String {
+        return if (numberOfRecipesNotInBook()==0){
+            "No Unsaved Recipes "
+        }else{
+            var listOfRecipesNotInBook=""
+            for (recipe in recipes){
+                if (!recipe.recipeInBook) {
+                    listOfRecipesNotInBook += "${recipes.indexOf(recipe)}: $recipe /n"
+                }
+            }
+            listOfRecipesNotInBook
+        }
+    }
+
+    fun listRecipesInBook(): String {
+        return if (numberOfRecipesInBook()==0){
+            "No Recipes in Book"
+        }else{
+            var listOfRecipesInBook = ""
+            for (recipe in recipes){
+                if (recipe.recipeInBook){
+                    listOfRecipesInBook += "${recipes.indexOf(recipe)}: $recipe /n"
+                }
+            }
+            listOfRecipesInBook
+        }
+    }
+
     fun numberOfRecipes(): Int {
         return recipes.size
+    }
+
+    fun numberOfRecipesInBook(): Int {
+        var counter = 0
+        for (recipe in recipes){
+            if (recipe.recipeInBook){
+                counter++
+            }
+        }
+        return counter
+    }
+
+    fun numberOfRecipesNotInBook(): Int {
+        var counter = 0
+        for (recipe in recipes){
+            if (!recipe.recipeInBook){
+                counter++
+            }
+        }
+        return counter
     }
 
     fun findRecipe(index: Int): Recipe? {
