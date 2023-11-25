@@ -24,13 +24,14 @@ class RecipeAPITest {
     private var emptyRecipes: RecipeAPI? = RecipeAPI()
 
     @BeforeEach
-    fun setup(){
-        americanPancakes = Recipe("American -style Pancakes","Breakfast","flour,sugar,milk,eggs,butter",1,4,5, false)
-        overnightOats = Recipe("Overnight Oats","Breakfast","oats,yoghurt,berries,honey,cinnamon",1,1,4, false)
-        salmonSalad = Recipe("Salmon Salad","Lunch","salmon,potatoes,salad leaves",2,2,5, true)
-        cauliflowerSoup = Recipe("Cauliflower Soup","Lunch","cauliflower,cream,garlic,onion,celery",3,6,1, false)
-        lasagne = Recipe("Lasagne","Dinner","mince meat,milk,cheese,pasta sheets,tomato sauce",2,4,4, true)
-        pastaBake = Recipe("Pasta Bake","Dinner","pasta,chicken,cheese",1,6,5, false)
+    fun setup() {
+        americanPancakes =
+            Recipe("American -style Pancakes", "Breakfast", "flour,sugar,milk,eggs,butter", 1, 4, 5, false)
+        overnightOats = Recipe("Overnight Oats", "Breakfast", "oats,yoghurt,berries,honey,cinnamon", 1, 1, 4, false)
+        salmonSalad = Recipe("Salmon Salad", "Lunch", "salmon,potatoes,salad leaves", 2, 2, 5, true)
+        cauliflowerSoup = Recipe("Cauliflower Soup", "Lunch", "cauliflower,cream,garlic,onion,celery", 3, 6, 1, false)
+        lasagne = Recipe("Lasagne", "Dinner", "mince meat,milk,cheese,pasta sheets,tomato sauce", 2, 4, 4, true)
+        pastaBake = Recipe("Pasta Bake", "Dinner", "pasta,chicken,cheese", 1, 6, 5, false)
 
         //adding 6 Recipes to recipe api
         populatedRecipes!!.add(americanPancakes!!)
@@ -42,7 +43,7 @@ class RecipeAPITest {
     }
 
     @AfterEach
-    fun tearDown(){
+    fun tearDown() {
         americanPancakes = null
         overnightOats = null
         salmonSalad = null
@@ -74,7 +75,10 @@ class RecipeAPITest {
             assertEquals(1, emptyRecipes!!.numberOfRecipes())
             assertEquals(newRecipe, emptyRecipes!!.findRecipe(emptyRecipes!!.numberOfRecipes() - 1))
         }
+    }
 
+    @Nested
+    inner class ListRecipes {
         @Test
         fun `listAllRecipes returns No Recipes Stored message when ArrayList is empty`() {
             assertEquals(0, emptyRecipes!!.numberOfRecipes())
@@ -92,7 +96,7 @@ class RecipeAPITest {
             assertTrue(recipesString.contains("lasagne"))
             assertTrue(recipesString.contains("pasta bake"))
         }
-    }
+
 
     @Test
     fun `listRecipesNotInBook returns no unsaved recipes when ArrayList is empty`() {
@@ -101,6 +105,7 @@ class RecipeAPITest {
             emptyRecipes!!.listRecipesNotInBook().lowercase().contains("no unsaved recipes")
         )
     }
+
     @Test
     fun `listRecipesNotInBook returns unsaved recipes when ArrayList has unsaved notes`() {
         assertEquals(4, populatedRecipes!!.numberOfRecipesNotInBook())
@@ -120,6 +125,7 @@ class RecipeAPITest {
             emptyRecipes!!.listRecipesInBook().lowercase().contains("no recipes in book")
         )
     }
+
     @Test
     fun `listRecipesInBook returns recipes in book when ArrayList has recipes store in book`() {
         assertEquals(2, populatedRecipes!!.numberOfRecipesInBook())
@@ -135,7 +141,8 @@ class RecipeAPITest {
     @Test
     fun `listRecipesBySpecifiedRating returns No Recipes when ArrayList is empty`() {
         assertEquals(0, emptyRecipes!!.numberOfRecipes())
-        assertTrue(emptyRecipes!!.listRecipesBySpecifiedRating(1).lowercase().contains("no recipes")
+        assertTrue(
+            emptyRecipes!!.listRecipesBySpecifiedRating(1).lowercase().contains("no recipes")
         )
     }
 
@@ -171,4 +178,41 @@ class RecipeAPITest {
         assertTrue(rating4String.contains("lasagne"))
         assertFalse(rating4String.contains("pasta bake"))
     }
+        @Test
+        fun `listRecipesBySpecifiedDifficultyLevel returns No Recipes when ArrayList is empty`() {
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(
+                emptyRecipes!!.listRecipesBySpecifiedDifficultyLevel(1).lowercase().contains("no recipes")
+            )
+        }
+        @Test
+        fun `listRecipesBySpecifiedDifficultyLevel returns no recipes when no recipes with that difficulty level exist`() {
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            val difficultyLevel2String = populatedRecipes!!.listRecipesBySpecifiedDifficultyLevel(5).lowercase()
+            assertTrue(difficultyLevel2String.contains("no recipes"))
+            assertTrue(difficultyLevel2String.contains("5"))
+        }
+
+        @Test
+        fun `listRecipesBySpecifiedDifficultyLevel returns all recipes that match that difficulty level when recipes with that difficulty level exist`() {
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            val difficultyLevel1String = populatedRecipes!!.listRecipesBySpecifiedDifficultyLevel(1).lowercase()
+            assertTrue(difficultyLevel1String.contains("american -style pancakes"))
+            assertTrue(difficultyLevel1String.contains("overnight oats"))
+            assertFalse(difficultyLevel1String.contains("salmon salad"))
+            assertFalse(difficultyLevel1String.contains("cauliflower soup"))
+            assertFalse(difficultyLevel1String.contains("lasagne"))
+            assertTrue(difficultyLevel1String.contains("pasta bake"))
+
+
+            val difficultyLevel2String = populatedRecipes!!.listRecipesBySpecifiedDifficultyLevel(2).lowercase(Locale.getDefault())
+            assertFalse(difficultyLevel2String.contains("american -style pancakes"))
+            assertFalse(difficultyLevel2String.contains("overnight oats"))
+            assertTrue(difficultyLevel2String.contains("salmon salad"))
+            assertFalse(difficultyLevel2String.contains("cauliflower soup"))
+            assertTrue(difficultyLevel2String.contains("lasagne"))
+            assertFalse(difficultyLevel2String.contains("pasta bake"))
+        }
+}
+
 }

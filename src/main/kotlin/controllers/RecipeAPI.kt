@@ -70,6 +70,37 @@ class RecipeAPI {
         }
         }
 
+    fun listRecipesBySpecifiedDifficultyLevel(difficultyLevel: Int): String {
+        return if (recipes.isEmpty())
+        {
+            "No recipes stored"
+        }else{
+            var listOfRecipes = ""
+            for (i in recipes.indices){
+                if (recipes [i].difficultyLevel == difficultyLevel){
+                    listOfRecipes +=
+                        """$i: ${recipes[i]}
+                        """.trimIndent()
+                }
+            }
+            if (listOfRecipes.equals("")) {
+                "No recipes with difficulty level: $difficultyLevel"
+            }else{
+                "${numberOfRecipesByDifficultyLevel(difficultyLevel)} recipes with difficulty level $difficultyLevel: $listOfRecipes"
+            }
+        }
+    }
+
+    fun numberOfRecipesByDifficultyLevel(difficultyLevel: Int): Int{
+        var counter = 0
+        for (recipe in recipes) {
+            if (recipe.difficultyLevel == difficultyLevel){
+                counter++
+            }
+        }
+        return counter
+    }
+
     fun numberOfRecipesByRating(rating: Int): Int{
         var counter = 0
         for (recipe in recipes) {
