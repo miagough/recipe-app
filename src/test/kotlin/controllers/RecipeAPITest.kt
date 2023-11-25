@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.*
 import kotlin.test.assertEquals
 
 
@@ -26,9 +27,9 @@ class RecipeAPITest {
     fun setup(){
         americanPancakes = Recipe("American -style Pancakes","Breakfast","flour,sugar,milk,eggs,butter",1,4,5, false)
         overnightOats = Recipe("Overnight Oats","Breakfast","oats,yoghurt,berries,honey,cinnamon",1,1,4, false)
-        salmonSalad = Recipe("Salmon Salad","Lunch","salmon,potatoes,salad leaves",2,2,5, false)
+        salmonSalad = Recipe("Salmon Salad","Lunch","salmon,potatoes,salad leaves",2,2,5, true)
         cauliflowerSoup = Recipe("Cauliflower Soup","Lunch","cauliflower,cream,garlic,onion,celery",3,6,4, false)
-        lasagne = Recipe("Lasagne","Dinner","mince meat,milk,cheese,pasta sheets,tomato sauce",2,4,4, false)
+        lasagne = Recipe("Lasagne","Dinner","mince meat,milk,cheese,pasta sheets,tomato sauce",2,4,4, true)
         pastaBake = Recipe("Pasta Bake","Dinner","pasta,chicken,cheese",1,6,5, false)
 
         //adding 6 Recipes to recipe api
@@ -81,15 +82,53 @@ class RecipeAPITest {
         }
 
         @Test
-        fun `listAllRecipes returns Recipes when ArrayList has notes stored`() {
+        fun `listAllRecipes returns Recipes when ArrayList has recipes stored`() {
             assertEquals(6, populatedRecipes!!.numberOfRecipes())
             val recipesString = populatedRecipes!!.listAllRecipes().lowercase()
-            assertFalse(recipesString.contains("American -style Pancakes"))
-            assertFalse(recipesString.contains("Overnight Oats"))
-            assertFalse(recipesString.contains("Salmon Salad"))
-            assertFalse(recipesString.contains("Cauliflower Soup"))
-            assertFalse(recipesString.contains("Lasagne"))
-            assertFalse(recipesString.contains("Pasta Bake"))
+            assertTrue(recipesString.contains("american -style pancakes"))
+            assertTrue(recipesString.contains("overnight oats"))
+            assertTrue(recipesString.contains("salmon salad"))
+            assertTrue(recipesString.contains("cauliflower soup"))
+            assertTrue(recipesString.contains("lasagne"))
+            assertTrue(recipesString.contains("pasta bake"))
         }
+    }
+
+    @Test
+    fun `listRecipesNotInBook returns no unsaved recipes when ArrayList is empty`() {
+        assertEquals(0, emptyRecipes!!.numberOfRecipesNotInBook())
+        assertTrue(
+            emptyRecipes!!.listRecipesNotInBook().lowercase().contains("no unsaved recipes")
+        )
+    }
+    @Test
+    fun `listRecipesNotInBook returns unsaved recipes when ArrayList has unsaved notes`() {
+        assertEquals(4, populatedRecipes!!.numberOfRecipesNotInBook())
+        val activeRecipesString = populatedRecipes!!.listRecipesNotInBook().lowercase()
+        assertTrue(activeRecipesString.contains("american -style pancakes"))
+        assertTrue(activeRecipesString.contains("overnight oats"))
+        assertFalse(activeRecipesString.contains("salmon salad"))
+        assertTrue(activeRecipesString.contains("cauliflower soup"))
+        assertFalse(activeRecipesString.contains("lasagne"))
+        assertTrue(activeRecipesString.contains("pasta bake"))
+    }
+
+    @Test
+    fun `listRecipesInBook returns no recipes in book when ArrayList is empty`() {
+        assertEquals(0, emptyRecipes!!.numberOfRecipesInBook())
+        assertTrue(
+            emptyRecipes!!.listRecipesInBook().lowercase().contains("no recipes in book")
+        )
+    }
+    @Test
+    fun `listRecipesInBook returns recipes in book when ArrayList has recipes store in book`() {
+        assertEquals(2, populatedRecipes!!.numberOfRecipesInBook())
+        val archivedRecipesString = populatedRecipes!!.listRecipesInBook().lowercase(Locale.getDefault())
+        assertFalse(archivedRecipesString.contains("american -style pancakes"))
+        assertFalse(archivedRecipesString.contains("overnight oats"))
+        assertTrue(archivedRecipesString.contains("salmon salad"))
+        assertFalse(archivedRecipesString.contains("cauliflower soup"))
+        assertTrue(archivedRecipesString.contains("lasagne"))
+        assertFalse(archivedRecipesString.contains("pasta bake"))
     }
 }
