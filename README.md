@@ -7,6 +7,10 @@ This project provides the user with access to a console based recipe app.
 This project allows users to:
 - Add a recipe
 - List all recipes
+- List recipes by whether or not they are stored in the Recipe Book.
+- List recipes by specfied priority.
+- List recipes by specfied rating.
+- List recipes by specified difficulty level.
 - Update a recipe
 - Delete a recipe
 
