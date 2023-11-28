@@ -144,10 +144,32 @@ class RecipeAPI {
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
+    fun isValidIndex(index: Int) :Boolean{
+        return isValidListIndex(index, recipes);
+    }
 
     fun deleteRecipe(indexToDelete: Int): Recipe? {
         return if (isValidListIndex(indexToDelete, recipes)){
             recipes.removeAt(indexToDelete)
         }else null
+    }
+
+    fun updateRecipe(indexToUpdate: Int, recipe: Recipe?): Boolean {
+        //find the recipe object by the index number
+        val foundRecipe = findRecipe(indexToUpdate)
+
+        //if the recipe exists, use the recipe details passed as parameters to update the found recipe in the ArrayList.
+        if ((foundRecipe != null) && (recipe != null)) {
+            foundRecipe.recipeName = recipe.recipeName
+            foundRecipe.recipeCategory = recipe.recipeCategory
+            foundRecipe.ingredients = recipe.ingredients
+            foundRecipe.difficultyLevel = recipe.difficultyLevel
+            foundRecipe.servingSize = recipe.servingSize
+            foundRecipe.recipeRating = recipe.recipeRating
+            return true
+        }
+
+        //if the recipe was not found, return false, indicating that the update was not successful
+        return false
     }
 }

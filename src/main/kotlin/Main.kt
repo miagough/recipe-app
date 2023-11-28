@@ -71,8 +71,31 @@ fun listRecipes() {
 }
 
 fun updateRecipe() {
-    logger.info { "updateRecipe() function invoked" }
+    //logger.info { "updateRecipe() function invoked" }
+    listRecipes()
+    if (recipeAPI.numberOfRecipes()>0) {
+        //only ask the user to choose the recipe if recipes exist
+        val indexToUpdate = readNextInt("Enter the index of the recipe to update: ")
+        if (recipeAPI.isValidIndex(indexToUpdate)) {
+            val recipeName = readNextLine("Enter a title for the recipe: ")
+            val recipeCategory = readNextLine("Enter a category for the recipe: ")
+            val ingredients = readNextLine("Enter the ingredients needed for the recipe: ")
+            val difficultyLevel = readNextInt("Enter the difficulty level (1-5): ")
+            val servingSize = readNextInt("Enter the servingSize: ")
+            val recipeRating = readNextInt("Enter the recipe rating(1-5): ")
+
+            //pass the index of the recipe and the new recipe details to recipeAPI for updating and check for success.
+            if (recipeAPI.updateRecipe(indexToUpdate, Recipe(recipeName, recipeCategory, ingredients, difficultyLevel, servingSize, recipeRating, false))){
+                println("Update Successful")
+            } else {
+                println("Update Failed")
+            }
+        } else {
+            println("There are no recipes for this index number")
+        }
+    }
 }
+
 
 fun deleteRecipe() {
     //logger.info { "deleteRecipe() function invoked" }
