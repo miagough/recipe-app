@@ -1,11 +1,11 @@
 package models
 
-data class Recipe(val recipeName: String,
-                  val recipeCategory: String,
-                  val ingredients: String,
-                  val difficultyLevel: Int,
-                  val servingSize: Int,
-                  val recipeRating: Int,
-                  val recipeInBook: Boolean) {
+data class Recipe(var recipeName: String,
+                  var recipeCategory: String,
+                  var ingredients: String,
+                  var difficultyLevel: Int,
+                  var servingSize: Int,
+                  var recipeRating: Int,
+                  var recipeInBook: Boolean) {
 
 }
