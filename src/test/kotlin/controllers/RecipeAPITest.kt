@@ -3,8 +3,7 @@ package controllers
 
 import models.Recipe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -214,5 +213,23 @@ class RecipeAPITest {
             assertFalse(difficultyLevel2String.contains("pasta bake"))
         }
 }
+    @Nested
+    inner class DeleteRecipes{
+        @Test
+        fun `deleting a Recipe that does not exist, returns null`(){
+            assertNull(emptyRecipes!!.deleteRecipe(0))
+            assertNull(populatedRecipes!!.deleteRecipe(-1))
+            assertNull(populatedRecipes!!.deleteRecipe(6))
+        }
+        @Test
+        fun `deleting a recipe that exists delete and returns deleted object`(){
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            assertEquals(overnightOats,populatedRecipes!!.deleteRecipe(1))
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            assertEquals(pastaBake, populatedRecipes!!.deleteRecipe(4))
+            assertEquals(4, populatedRecipes!!.numberOfRecipes())
+
+        }
+    }
 
 }
