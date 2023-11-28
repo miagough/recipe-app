@@ -75,7 +75,19 @@ fun updateRecipe() {
 }
 
 fun deleteRecipe() {
-    logger.info { "deleteRecipe() function invoked" }
+    //logger.info { "deleteRecipe() function invoked" }
+    listRecipes()
+    if (recipeAPI.numberOfRecipes()>0){
+        //only ask the user to choose the recipe to delete if recipes exist
+        val indexToDelete = readNextInt("Enter the index of the recipe to delete: ")
+        //pass the index of the recipe to RecipeAPI for deleting and check for success.
+        val recipeToDelete = recipeAPI.deleteRecipe(indexToDelete)
+        if (recipeToDelete != null){
+            println("Delete Successful! Deleted Recipe: ${recipeToDelete.recipeName}")
+        } else{
+            println("Delete NOT Successful")
+        }
+    }
 }
 
 fun exitApp() {

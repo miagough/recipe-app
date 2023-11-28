@@ -144,4 +144,10 @@ class RecipeAPI {
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
+
+    fun deleteRecipe(indexToDelete: Int): Recipe? {
+        return if (isValidListIndex(indexToDelete, recipes)){
+            recipes.removeAt(indexToDelete)
+        }else null
+    }
 }
