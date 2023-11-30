@@ -1,0 +1,1 @@
+{"object-stream":{"list":[{"models.Recipe":[{"recipeName":"toast","recipeCategory":"breakfast","ingredients":"bread, butter","difficultyLevel":1,"servingSize":1,"recipeRating":3,"recipeInBook":false},{"recipeName":"soup","recipeCategory":"lunch","ingredients":"chicken, vegetables","difficultyLevel":2,"servingSize":2,"recipeRating":4,"recipeInBook":false}]}]}}
