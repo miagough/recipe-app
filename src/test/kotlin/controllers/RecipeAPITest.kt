@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import persistence.XMLSerializer
+import persistence.JSONSerializer
+import java.io.File
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -19,8 +22,8 @@ class RecipeAPITest {
     private var cauliflowerSoup: Recipe? = null
     private var lasagne: Recipe? = null
     private var pastaBake: Recipe? = null
-    private var populatedRecipes: RecipeAPI? = RecipeAPI()
-    private var emptyRecipes: RecipeAPI? = RecipeAPI()
+    private var populatedRecipes: RecipeAPI? = RecipeAPI(XMLSerializer(File("recipe.xml")))
+    private var emptyRecipes: RecipeAPI? = RecipeAPI(XMLSerializer(File("recipe.xml")))
 
     @BeforeEach
     fun setup() {
@@ -259,6 +262,86 @@ class RecipeAPITest {
             assertEquals(2, populatedRecipes!!.findRecipe(1)!!.difficultyLevel)
             assertEquals(2, populatedRecipes!!.findRecipe(1)!!.servingSize)
             assertEquals(4, populatedRecipes!!.findRecipe(1)!!.recipeRating)
+        }
+    }
+
+    @Nested
+    inner class PersistenceTests {
+
+        @Test
+        fun `saving and loading an empty collection in XML doesn't crash app`() {
+            // Saving an empty recipe.XML file.
+            val storingRecipes = RecipeAPI(XMLSerializer(File("recipes.xml")))
+            storingRecipes.store()
+
+            //Loading the empty recipes.xml file into a new object
+            val loadedRecipes = RecipeAPI(XMLSerializer(File("recipes.xml")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
+            assertEquals(0, storingRecipes.numberOfRecipes())
+            assertEquals(0, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+        }
+
+        @Test
+        fun `saving and loading a loaded collection in XML doesn't loose data`() {
+            // Storing 3 recipes to the recipes.XML file.
+            val storingRecipes = RecipeAPI(XMLSerializer(File("recipes.xml")))
+            storingRecipes.add(americanPancakes!!)
+            storingRecipes.add(overnightOats!!)
+            storingRecipes.add(salmonSalad!!)
+            storingRecipes.store()
+
+            //Loading recipes.xml into a different collection
+            val loadedRecipes = RecipeAPI(XMLSerializer(File("recipes.xml")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
+            assertEquals(3, storingRecipes.numberOfRecipes())
+            assertEquals(3, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.findRecipe(0), loadedRecipes.findRecipe(0))
+            assertEquals(storingRecipes.findRecipe(1), loadedRecipes.findRecipe(1))
+            assertEquals(storingRecipes.findRecipe(2), loadedRecipes.findRecipe(2))
+        }
+
+        @Test
+        fun `saving and loading an empty collection in JSON doesn't crash app`() {
+            // Saving an empty recipes.json file.
+            val storingRecipes = RecipeAPI(JSONSerializer(File("recipes.json")))
+            storingRecipes.store()
+
+            //Loading the empty recipes.json file into a new object
+            val loadedRecipes = RecipeAPI(JSONSerializer(File("recipes.json")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
+            assertEquals(0, storingRecipes.numberOfRecipes())
+            assertEquals(0, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+        }
+
+        @Test
+        fun `saving and loading a loaded collection in JSON doesn't loose data`() {
+            // Storing 3 recipes to the recipes.json file.
+            val storingRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
+            storingRecipes.add(americanPancakes!!)
+            storingRecipes.add(overnightOats!!)
+            storingRecipes.add(salmonSalad!!)
+            storingRecipes.store()
+
+            //Loading recipes.json into a different collection
+            val loadedRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
+            assertEquals(3, storingRecipes.numberOfRecipes())
+            assertEquals(3, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.findRecipe(0), loadedRecipes.findRecipe(0))
+            assertEquals(storingRecipes.findRecipe(1), loadedRecipes.findRecipe(1))
+            assertEquals(storingRecipes.findRecipe(2), loadedRecipes.findRecipe(2))
         }
     }
 

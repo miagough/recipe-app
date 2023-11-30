@@ -1,0 +1,31 @@
+<object-stream>
+  <list>
+    <models.Recipe>
+      <recipeName>American -style Pancakes</recipeName>
+      <recipeCategory>Breakfast</recipeCategory>
+      <ingredients>flour,sugar,milk,eggs,butter</ingredients>
+      <difficultyLevel>1</difficultyLevel>
+      <servingSize>4</servingSize>
+      <recipeRating>5</recipeRating>
+      <recipeInBook>false</recipeInBook>
+    </models.Recipe>
+    <models.Recipe>
+      <recipeName>Overnight Oats</recipeName>
+      <recipeCategory>Breakfast</recipeCategory>
+      <ingredients>oats,yoghurt,berries,honey,cinnamon</ingredients>
+      <difficultyLevel>1</difficultyLevel>
+      <servingSize>1</servingSize>
+      <recipeRating>4</recipeRating>
+      <recipeInBook>false</recipeInBook>
+    </models.Recipe>
+    <models.Recipe>
+      <recipeName>Salmon Salad</recipeName>
+      <recipeCategory>Lunch</recipeCategory>
+      <ingredients>salmon,potatoes,salad leaves</ingredients>
+      <difficultyLevel>2</difficultyLevel>
+      <servingSize>2</servingSize>
+      <recipeRating>5</recipeRating>
+      <recipeInBook>true</recipeInBook>
+    </models.Recipe>
+  </list>
+</object-stream>
