@@ -1,0 +1,22 @@
+<object-stream>
+  <list>
+    <models.Recipe>
+      <recipeName>toast</recipeName>
+      <recipeCategory>breakfast</recipeCategory>
+      <ingredients>bread, butter</ingredients>
+      <difficultyLevel>1</difficultyLevel>
+      <servingSize>1</servingSize>
+      <recipeRating>3</recipeRating>
+      <recipeInBook>false</recipeInBook>
+    </models.Recipe>
+    <models.Recipe>
+      <recipeName>soup</recipeName>
+      <recipeCategory>lunch</recipeCategory>
+      <ingredients>chicken, vegetables</ingredients>
+      <difficultyLevel>2</difficultyLevel>
+      <servingSize>2</servingSize>
+      <recipeRating>4</recipeRating>
+      <recipeInBook>false</recipeInBook>
+    </models.Recipe>
+  </list>
+</object-stream>
