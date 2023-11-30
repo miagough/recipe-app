@@ -1,6 +1,7 @@
 import controllers.RecipeAPI
 import models.Recipe
 import mu.KotlinLogging
+import persistence.JSONSerializer
 import persistence.XMLSerializer
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
@@ -12,7 +13,8 @@ import java.lang.System.exit
 
 
 private val logger = KotlinLogging.logger {}
-private val recipeAPI = RecipeAPI(XMLSerializer(File("recipe.xml")))
+//private val recipeAPI = RecipeAPI(XMLSerializer(File("recipe.xml")))
+private val recipeAPI = RecipeAPI(JSONSerializer(File("recipe.json")))
 
 fun main(args: Array<String>) {
     runMenu()
