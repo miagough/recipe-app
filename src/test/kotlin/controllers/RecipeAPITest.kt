@@ -345,4 +345,27 @@ class RecipeAPITest {
         }
     }
 
+    @Nested
+    inner class RecipesInBook {
+        @Test
+        fun `adding a recipe to book that does not exist returns false`(){
+            assertFalse(populatedRecipes!!.recipeInBook(7))
+            assertFalse(populatedRecipes!!.recipeInBook(-1))
+            assertFalse(emptyRecipes!!.recipeInBook(0))
+        }
+
+        @Test
+        fun `adding an already added recipe to book returns false`(){
+            assertTrue(populatedRecipes!!.findRecipe(2)!!.recipeInBook)
+            assertFalse(populatedRecipes!!.recipeInBook(2))
+        }
+
+        @Test
+        fun `adding an unstored recipe that already exists returns true and archives`() {
+            assertFalse(populatedRecipes!!.findRecipe(1)!!.recipeInBook)
+            assertTrue(populatedRecipes!!.recipeInBook(1))
+            assertTrue(populatedRecipes!!.findRecipe(1)!!.recipeInBook)
+        }
+    }
+
 }

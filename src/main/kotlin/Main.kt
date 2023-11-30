@@ -30,6 +30,7 @@ fun mainMenu() : Int {
          > |   2) List all recipes     |
          > |   3) Update a recipe      |
          > |   4) Delete a recipe      |
+         > |   5) Recipe Book          |
          > -----------------------------
          > |  20) Save Recipes
          > |  21) Load Recipes
@@ -48,6 +49,7 @@ fun runMenu() {
             2  -> listRecipes()
             3  -> updateRecipe()
             4  -> deleteRecipe()
+            5  -> recipeInBook()
             20 -> save()
             21 -> load()
             0  -> exitApp()
@@ -76,6 +78,10 @@ fun addRecipe() {
 fun listRecipes() {
     //logger.info { "listRecipes() function invoked" }
     println(recipeAPI.listAllRecipes())
+}
+
+fun listRecipesInBook() {
+    println(recipeAPI.listRecipesInBook())
 }
 
 fun updateRecipe() {
@@ -117,6 +123,20 @@ fun deleteRecipe() {
             println("Delete Successful! Deleted Recipe: ${recipeToDelete.recipeName}")
         } else{
             println("Delete NOT Successful")
+        }
+    }
+}
+
+fun recipeInBook() {
+    listRecipesInBook()
+    if (recipeAPI.numberOfRecipesInBook() > 0) {
+        //only ask the user to choose the recipe to add to book if unstored recipes exist
+        val indexToAdd = readNextInt("Enter the index of the recipe to add to Recipe Book: ")
+        //pass the index of the recipe to recipeAPI for adding to book and check for success.
+        if (recipeAPI.recipeInBook(indexToAdd)) {
+            println("Recipe Successfully added to Recipe Book!")
+        } else {
+            println("Recipe was NOT successfully added to Recipe Book")
         }
     }
 }

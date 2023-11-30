@@ -176,6 +176,17 @@ class RecipeAPI(serializerType: Serializer) {
         return false
     }
 
+    fun recipeInBook(indexToAdd: Int): Boolean {
+        if (isValidIndex(indexToAdd)){
+            val recipeToAdd = recipes[indexToAdd]
+            if (!recipeToAdd.recipeInBook){
+                recipeToAdd.recipeInBook = true
+                return true
+            }
+        }
+        return false
+    }
+
     @Throws(Exception::class)
     fun load() {
         recipes = serializer.read() as ArrayList<Recipe>
