@@ -76,12 +76,49 @@ fun addRecipe() {
 }
 
 fun listRecipes() {
-    //logger.info { "listRecipes() function invoked" }
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val option = readNextInt(
+            """
+                  > -----------------------------------------
+                  > |   1) View ALL recipes                 |
+                  > |   2) View UNSTORED recipes            |
+                  > |   3) View RECIPE BOOK                 |
+                  > |   4) View recipes by DIFFICULTY LEVEL |
+                  > |   5) View recipes by RATING           |
+                  > -----------------------------------------
+         > ==>> """.trimMargin(">"))
+
+        when (option) {
+            1 -> listAllRecipes();
+            2 -> listRecipesNotInBook();
+            3 -> listRecipesInBook();
+            4 -> listRecipesBySpecifiedDifficultyLevel();
+            5 -> listRecipesBySpecifiedRating();
+
+            else -> println("Invalid option entered: " + option);
+        }
+    } else {
+        println("Option Invalid - No recipes stored");
+    }
+}
+fun listAllRecipes() {
     println(recipeAPI.listAllRecipes())
+}
+
+fun listRecipesNotInBook() {
+    println(recipeAPI.listRecipesNotInBook())
 }
 
 fun listRecipesInBook() {
     println(recipeAPI.listRecipesInBook())
+}
+
+fun listRecipesBySpecifiedRating() {
+    println(recipeAPI.listRecipesBySpecifiedRating(readNextInt("Which rating would you like?: ")))
+}
+
+fun listRecipesBySpecifiedDifficultyLevel() {
+    println(recipeAPI.listRecipesBySpecifiedDifficultyLevel(readNextInt("Which difficulty level would you like?: ")))
 }
 
 fun updateRecipe() {
