@@ -13,6 +13,7 @@ This project allows users to:
 - List recipes by specified difficulty level.
 - Update a recipe
 - Delete a recipe
+- Use persistence with either XML or JSON
 
 ## Getting Started
 This project is made using Kotlin. Therefore you must have Kotlin installed on your machine to be able to access it.
