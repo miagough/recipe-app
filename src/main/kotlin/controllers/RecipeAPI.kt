@@ -1,8 +1,11 @@
 package controllers
 
 import models.Recipe
+import persistence.Serializer
 
-class RecipeAPI {
+class RecipeAPI(serializerType: Serializer) {
+
+    private var serializer: Serializer = serializerType
     private var recipes = ArrayList<Recipe>()
 
     fun add(recipe: Recipe): Boolean{
@@ -171,5 +174,15 @@ class RecipeAPI {
 
         //if the recipe was not found, return false, indicating that the update was not successful
         return false
+    }
+
+    @Throws(Exception::class)
+    fun load() {
+        recipes = serializer.read() as ArrayList<Recipe>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(recipes)
     }
 }

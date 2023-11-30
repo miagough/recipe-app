@@ -1,16 +1,18 @@
 import controllers.RecipeAPI
 import models.Recipe
 import mu.KotlinLogging
+import persistence.XMLSerializer
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import java.io.File
 import java.lang.System.exit
 
 
 
 
 private val logger = KotlinLogging.logger {}
-private val recipeAPI = RecipeAPI()
+private val recipeAPI = RecipeAPI(XMLSerializer(File("recipe.xml")))
 
 fun main(args: Array<String>) {
     runMenu()
@@ -27,6 +29,8 @@ fun mainMenu() : Int {
          > |   3) Update a recipe      |
          > |   4) Delete a recipe      |
          > -----------------------------
+         > |  20) Save Recipes
+         > |  21) Load Recipes
          > |   0) Exit                 |
          > -----------------------------
          > ==>> """.trimMargin(">"))
@@ -42,6 +46,8 @@ fun runMenu() {
             2  -> listRecipes()
             3  -> updateRecipe()
             4  -> deleteRecipe()
+            20 -> save()
+            21 -> load()
             0  -> exitApp()
             else -> println("Invalid option entered: $option")
         }
@@ -110,6 +116,22 @@ fun deleteRecipe() {
         } else{
             println("Delete NOT Successful")
         }
+    }
+}
+
+fun save() {
+    try {
+        recipeAPI.store()
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        recipeAPI.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
     }
 }
 
