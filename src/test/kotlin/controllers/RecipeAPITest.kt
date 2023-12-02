@@ -100,7 +100,7 @@ class RecipeAPITest {
 
 
     @Test
-    fun `listRecipesNotInBook returns no unsaved recipes when ArrayList is empty`() {
+    fun `listRecipesNotInBook returns no recipes in book when ArrayList is empty`() {
         assertEquals(0, emptyRecipes!!.numberOfRecipesNotInBook())
         assertTrue(
             emptyRecipes!!.listRecipesNotInBook().lowercase().contains("no unsaved recipes")

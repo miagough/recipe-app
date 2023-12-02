@@ -14,58 +14,27 @@ class RecipeAPI(serializerType: Serializer) {
 
     fun listAllRecipes(): String =
         if  (recipes.isEmpty()) "No recipes stored"
-        else recipes.joinToString (separator = "\n") { recipe ->
-            recipes.indexOf(recipe).toString() + ": " + recipe.toString() }
+        else formatListString(recipes)
 
 
-        fun listRecipesNotInBook(): String {
-        return if (numberOfRecipesNotInBook()==0){
-            "No Unsaved Recipes "
-        }else{
-            var listOfRecipesNotInBook=""
-            for (recipe in recipes){
-                if (!recipe.recipeInBook) {
-                    listOfRecipesNotInBook += "${recipes.indexOf(recipe)}: $recipe /n"
-                }
-            }
-            listOfRecipesNotInBook
-        }
-    }
+        fun listRecipesNotInBook(): String =
+            if  (numberOfRecipesNotInBook() == 0)  "No unsaved recipes"
+            else formatListString(recipes.filter { note -> !note.recipeInBook})
 
-    fun listRecipesInBook(): String {
-        return if (numberOfRecipesInBook()==0){
-            "No Recipes in Book"
-        }else{
-            var listOfRecipesInBook = ""
-            for (recipe in recipes){
-                if (recipe.recipeInBook){
-                    listOfRecipesInBook += "${recipes.indexOf(recipe)}: $recipe /n"
-                }
-            }
-            listOfRecipesInBook
-        }
-    }
 
-    fun listRecipesBySpecifiedRating(rating: Int): String {
-        return if (recipes.isEmpty())
-        {
-            "No recipes stored"
-        }else{
-            var listOfRecipes = ""
-            for (i in recipes.indices){
-                if (recipes [i].recipeRating == rating){
-                    listOfRecipes +=
-                        """$i: ${recipes[i]}
-                        """.trimIndent()
-                }
-            }
-            if (listOfRecipes.equals("")) {
-                "No recipes with rating: $rating"
-            }else{
-                "${numberOfRecipesByRating(rating)} recipes with rating $rating: $listOfRecipes"
-            }
+    fun listRecipesInBook(): String =
+        if  (numberOfRecipesInBook() == 0) "No recipes in book"
+        else formatListString(recipes.filter { recipe -> recipe.recipeInBook})
+
+
+    fun listRecipesBySpecifiedRating(rating: Int): String =
+        if (recipes.isEmpty()) "No recipes stored"
+        else {
+            val listOfRecipes = formatListString(recipes.filter{ recipe -> recipe.recipeRating == rating})
+            if (listOfRecipes.equals("")) "No recipes with rating: $rating"
+            else "${numberOfRecipesByRating(rating)} recipes with rating $rating: $listOfRecipes"
         }
-        }
+
 
     fun listRecipesBySpecifiedDifficultyLevel(difficultyLevel: Int): String {
         return if (recipes.isEmpty())
@@ -176,9 +145,13 @@ class RecipeAPI(serializerType: Serializer) {
     }
 
     fun searchByTitle(searchString : String) =
-        recipes.filter { recipe -> recipe.recipeName.contains(searchString, ignoreCase = true)}
-            .joinToString (separator = "\n") {
-                    recipe ->  recipes.indexOf(recipe).toString() + ": " + recipe.toString() }
+        formatListString(
+            recipes.filter { recipe -> recipe.recipeName.contains(searchString, ignoreCase = true) })
+
+    private fun formatListString(recipesToFormat : List<Recipe>) : String =
+        recipesToFormat
+            .joinToString (separator = "\n") { recipe ->
+                recipes.indexOf(recipe).toString() + ": " + recipe.toString() }
 
     @Throws(Exception::class)
     fun load() {
