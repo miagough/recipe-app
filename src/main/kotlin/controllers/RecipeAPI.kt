@@ -12,19 +12,13 @@ class RecipeAPI(serializerType: Serializer) {
         return recipes.add(recipe)
     }
 
-    fun listAllRecipes(): String {
-        return if (recipes.isEmpty()) {
-            "No recipes stored"
-        }else{
-            var listOfRecipes = ""
-            for (i in recipes.indices){
-                listOfRecipes += "${i}: ${recipes[i]} \n"
-            }
-            listOfRecipes
-        }
-    }
+    fun listAllRecipes(): String =
+        if  (recipes.isEmpty()) "No recipes stored"
+        else recipes.joinToString (separator = "\n") { recipe ->
+            recipes.indexOf(recipe).toString() + ": " + recipe.toString() }
 
-    fun listRecipesNotInBook(): String {
+
+        fun listRecipesNotInBook(): String {
         return if (numberOfRecipesNotInBook()==0){
             "No Unsaved Recipes "
         }else{
