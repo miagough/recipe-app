@@ -368,4 +368,36 @@ class RecipeAPITest {
         }
     }
 
+    @Nested
+    inner class CountingMethods {
+
+        @Test
+        fun numberOfRecipesCalculatedCorrectly() {
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+        }
+
+        @Test
+        fun numberOfRecipesInBookCalculatedCorrectly() {
+            assertEquals(2, populatedRecipes!!.numberOfRecipesInBook())
+            assertEquals(0, emptyRecipes!!.numberOfRecipesInBook())
+        }
+
+        @Test
+        fun numberOfRecipesNotInBookCalculatedCorrectly() {
+            assertEquals(4, populatedRecipes!!.numberOfRecipesNotInBook())
+            assertEquals(0, emptyRecipes!!.numberOfRecipesNotInBook())
+        }
+
+        @Test
+        fun numberOfRecipesByRatingCalculatedCorrectly() {
+            assertEquals(1, populatedRecipes!!.numberOfRecipesByRating(1))
+            assertEquals(0, populatedRecipes!!.numberOfRecipesByRating(2))
+            assertEquals(0, populatedRecipes!!.numberOfRecipesByRating(3))
+            assertEquals(2, populatedRecipes!!.numberOfRecipesByRating(4))
+            assertEquals(3, populatedRecipes!!.numberOfRecipesByRating(5))
+            assertEquals(0, emptyRecipes!!.numberOfRecipesByRating(1))
+        }
+    }
+
 }
