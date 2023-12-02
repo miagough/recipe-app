@@ -118,23 +118,17 @@ class RecipeAPI(serializerType: Serializer) {
     }
 
     fun numberOfRecipesInBook(): Int {
-        var counter = 0
-        for (recipe in recipes){
-            if (recipe.recipeInBook){
-                counter++
-            }
-        }
-        return counter
+        return recipes.stream()
+            .filter{recipe: Recipe -> recipe.recipeInBook}
+            .count()
+            .toInt()
     }
 
     fun numberOfRecipesNotInBook(): Int {
-        var counter = 0
-        for (recipe in recipes){
-            if (!recipe.recipeInBook){
-                counter++
-            }
-        }
-        return counter
+        return recipes.stream()
+            .filter{recipe: Recipe -> !recipe.recipeInBook}
+            .count()
+            .toInt()
     }
 
     fun findRecipe(index: Int): Recipe? {
