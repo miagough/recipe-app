@@ -98,7 +98,6 @@ class RecipeAPI(serializerType: Serializer) {
         if ((foundRecipe != null) && (recipe != null)) {
             foundRecipe.recipeName = recipe.recipeName
             foundRecipe.recipeCategory = recipe.recipeCategory
-            foundRecipe.ingredients = recipe.ingredients
             foundRecipe.difficultyLevel = recipe.difficultyLevel
             foundRecipe.servingSize = recipe.servingSize
             foundRecipe.recipeRating = recipe.recipeRating
@@ -123,6 +122,22 @@ class RecipeAPI(serializerType: Serializer) {
     fun searchByTitle(searchString : String) =
         formatListString(
             recipes.filter { recipe -> recipe.recipeName.contains(searchString, ignoreCase = true) })
+
+    fun searchIngredients(searchString: String): String {
+        return if (numberOfRecipes() == 0) "No recipes stored"
+        else {
+            var listOfRecipes = ""
+            for (recipe in recipes) {
+                for (ingredient in recipe.ingredients) {
+                    if (ingredient.ingredients.contains(searchString, ignoreCase = true)) {
+                        listOfRecipes += "${recipe.recipeId}: ${recipe.recipeName} \n\t${ingredient}\n"
+                    }
+                }
+            }
+            if (listOfRecipes == "") "No ingredients found for: $searchString"
+            else listOfRecipes
+        }
+    }
 
     private fun formatListString(recipesToFormat : List<Recipe>) : String =
         recipesToFormat

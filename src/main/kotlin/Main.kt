@@ -1,4 +1,5 @@
 import controllers.RecipeAPI
+import models.Ingredient
 import models.Recipe
 import mu.KotlinLogging
 import persistence.JSONSerializer
@@ -22,22 +23,28 @@ fun main(args: Array<String>) {
 
 fun mainMenu() : Int {
     return ScannerInput.readNextInt("""
-         > -----------------------------
-         > |        RECIPE APP         |
-         > -----------------------------
-         > | RECIPE MENU               |
-         > |   1) Add a recipe         |
-         > |   2) List all recipes     |
-         > |   3) Update a recipe      |
-         > |   4) Delete a recipe      |
-         > |   5) Recipe Book          |
-         > -----------------------------
-         > |   6) Search Recipes       |
-         > -----------------------------
-         > |  20) Save Recipes         |
-         > |  21) Load Recipes         |
-         > |   0) Exit                 |
-         > -----------------------------
+         > -----------------------------------------
+         > |              RECIPE APP               |
+         > -----------------------------------------
+         > | RECIPE MENU                           |
+         > |   1) Add a recipe                     |
+         > |   2) List all recipes                 |
+         > |   3) Update a recipe                  |
+         > |   4) Delete a recipe                  |
+         > |   5) Recipe Book                      |
+         > -----------------------------------------
+         > | INGREDIENTS MENU                      |
+         > |   6) Add ingredients to a recipe      |
+         > |   7) Update ingredients in a recipe   |
+         > |   8) Delete ingredients from a recipe |
+         > -----------------------------------------
+         > |   9) Search Recipes                   |
+         > |  10) Search Ingredients               |
+         > -----------------------------------------
+         > |  20) Save Recipes                     |
+         > |  21) Load Recipes                     |
+         > |   0) Exit                             |
+         > -----------------------------------------
          > ==>> """.trimMargin(">"))
 
 
@@ -52,7 +59,11 @@ fun runMenu() {
             3  -> updateRecipe()
             4  -> deleteRecipe()
             5  -> recipeInBook()
-            6  -> searchRecipes()
+            6  -> addIngredientsToRecipe()
+            7  -> updateIngredientsInRecipe()
+            8  -> deleteIngredients()
+            9  -> searchRecipes()
+            10 -> searchIngredients()
             20 -> save()
             21 -> load()
             0  -> exitApp()
@@ -65,11 +76,10 @@ fun addRecipe() {
     //logger.info { "addRecipe() function invoked" }
     val recipeName = readNextLine("Enter recipe name: ")
     val recipeCategory = readNextLine("Enter a category for your recipe: ")
-    val ingredients = readNextLine("Enter the ingredients needed: ")
     val difficultyLevel = readNextInt("Enter a difficulty level (1-easy, 2, 3, 4, 5-very difficult): ")
     val servingSize = readNextInt("Enter the serving size: ")
     val recipeRating = readNextInt("Rate this dish (1-not good, 2, 3, 4, 5-excellent): ")
-    val isAdded = recipeAPI.add(Recipe(recipeName,recipeCategory,ingredients,difficultyLevel,servingSize,recipeRating, false))
+    val isAdded = recipeAPI.add(Recipe(recipeName = recipeName, recipeCategory = recipeCategory, difficultyLevel = difficultyLevel, servingSize = servingSize, recipeRating = recipeRating))
 
     if (isAdded) {
         println("Added Successfully")
@@ -129,17 +139,16 @@ fun updateRecipe() {
     listRecipes()
     if (recipeAPI.numberOfRecipes()>0) {
         //only ask the user to choose the recipe if recipes exist
-        val indexToUpdate = readNextInt("Enter the index of the recipe to update: ")
-        if (recipeAPI.isValidIndex(indexToUpdate)) {
+        val id = readNextInt("Enter the id of the recipe to update: ")
+        if (recipeAPI.findRecipe(id) != null) {
             val recipeName = readNextLine("Enter a title for the recipe: ")
             val recipeCategory = readNextLine("Enter a category for the recipe: ")
-            val ingredients = readNextLine("Enter the ingredients needed for the recipe: ")
             val difficultyLevel = readNextInt("Enter the difficulty level (1-5): ")
             val servingSize = readNextInt("Enter the servingSize: ")
             val recipeRating = readNextInt("Enter the recipe rating(1-5): ")
 
             //pass the index of the recipe and the new recipe details to recipeAPI for updating and check for success.
-            if (recipeAPI.updateRecipe(indexToUpdate, Recipe(recipeName, recipeCategory, ingredients, difficultyLevel, servingSize, recipeRating, false))){
+            if (recipeAPI.updateRecipe(id,Recipe(0,recipeName, recipeCategory, difficultyLevel, servingSize, recipeRating, false))){
                 println("Update Successful")
             } else {
                 println("Update Failed")
@@ -181,6 +190,47 @@ fun recipeInBook() {
     }
 }
 
+private fun addIngredientsToRecipe() {
+    val recipe: Recipe? = askUserToChooseRecipeNotInBook()
+    if (recipe != null) {
+        if (recipe.addIngredient(Ingredient(ingredients= readNextLine("\t Ingredients: "))))
+            println("Add Successful!")
+        else println("Add NOT Successful")
+    }
+}
+
+fun updateIngredientsInRecipe() {
+    val recipe: Recipe? = askUserToChooseRecipeNotInBook()
+    if (recipe != null) {
+        val ingredient: Ingredient? = askUserToChooseIngredient(recipe)
+        if (ingredient != null) {
+            val newIngredients = readNextLine("Enter new ingredients: ")
+            if (recipe.update(ingredient.ingredientId, Ingredient(ingredients = newIngredients))) {
+                println("Ingredients updated")
+            } else {
+                println("Ingredients NOT updated")
+            }
+        } else {
+            println("Invalid Ingredient Id")
+        }
+    }
+}
+
+fun deleteIngredients() {
+    val recipe: Recipe? = askUserToChooseRecipeNotInBook()
+    if (recipe != null) {
+        val ingredient: Ingredient? = askUserToChooseIngredient(recipe)
+        if (ingredient != null) {
+            val isDeleted = recipe.delete(ingredient.ingredientId)
+            if (isDeleted) {
+                println("Delete Successful!")
+            } else {
+                println("Delete NOT Successful")
+            }
+        }
+    }
+}
+
 fun searchRecipes() {
     val searchTitle = readNextLine("Enter the description to search by: ")
     val searchResults = recipeAPI.searchByTitle(searchTitle)
@@ -188,6 +238,43 @@ fun searchRecipes() {
         println("No recipes found")
     } else {
         println(searchResults)
+    }
+}
+
+fun searchIngredients() {
+    val searchIngredients = readNextLine("Enter the ingredients to search by: ")
+    val searchResults = recipeAPI.searchIngredients(searchIngredients)
+    if (searchResults.isEmpty()) {
+        println("No ingredients found")
+    } else {
+        println(searchResults)
+    }
+}
+
+private fun askUserToChooseRecipeNotInBook(): Recipe? {
+    listRecipesNotInBook()
+    if (recipeAPI.numberOfRecipesNotInBook() > 0) {
+        val recipe = recipeAPI.findRecipe(readNextInt("\nEnter the id of the recipe: "))
+        if (recipe != null) {
+            if (recipe.recipeInBook) {
+                println("recipe is NOT unstored, it is in Recipe Book")
+            } else {
+                return recipe //chosen recipe is unstored
+            }
+        } else {
+            println("Recipe id is not valid")
+        }
+    }
+    return null //selected recipe is in Recipe Book
+}
+private fun askUserToChooseIngredient(recipe: Recipe): Ingredient? {
+    if (recipe.numberOfIngredients() > 0) {
+        print(recipe.listIngredients())
+        return recipe.findOne(readNextInt("\nEnter the id of the recipe: "))
+    }
+    else{
+        println ("No ingredients for chosen recipe")
+        return null
     }
 }
 

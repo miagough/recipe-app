@@ -27,12 +27,12 @@ class RecipeAPITest {
 
     @BeforeEach
     fun setup() {
-        americanPancakes = Recipe("American -style Pancakes", "Breakfast", "flour,sugar,milk,eggs,butter", 1, 4, 5, false)
-        overnightOats = Recipe("Overnight Oats", "Breakfast", "oats,yoghurt,berries,honey,cinnamon", 1, 1, 4, false)
-        salmonSalad = Recipe("Salmon Salad", "Lunch", "salmon,potatoes,salad leaves", 2, 2, 5, true)
-        cauliflowerSoup = Recipe("Cauliflower Soup", "Lunch", "cauliflower,cream,garlic,onion,celery", 3, 6, 1, false)
-        lasagne = Recipe("Lasagne", "Dinner", "mince meat,milk,cheese,pasta sheets,tomato sauce", 2, 4, 4, true)
-        pastaBake = Recipe("Pasta Bake", "Dinner", "pasta,chicken,cheese", 1, 6, 5, false)
+        americanPancakes = Recipe(0,"American -style Pancakes", "Breakfast", 1, 4, 5, false)
+        overnightOats = Recipe(1,"Overnight Oats", "Breakfast", 1, 1, 4, false)
+        salmonSalad = Recipe(2,"Salmon Salad", "Lunch",2, 2, 5, true)
+        cauliflowerSoup = Recipe(3,"Cauliflower Soup", "Lunch",  3, 6, 1, false)
+        lasagne = Recipe(4,"Lasagne", "Dinner", 2, 4, 4, true)
+        pastaBake = Recipe(5,"Pasta Bake", "Dinner",  1, 6, 5, false)
 
         //adding 6 Recipes to recipe api
         populatedRecipes!!.add(americanPancakes!!)
@@ -60,7 +60,7 @@ class RecipeAPITest {
         @Test
         fun `adding a Recipe to a populated list adds to ArrayList`() {
             val newRecipe =
-                Recipe("American -style Pancakes", "Breakfast", "flour,sugar,eggs,butter,milk", 1, 4, 5, false)
+                Recipe(0,"American -style Pancakes", "Breakfast",  1, 4, 5, false)
             assertEquals(6, populatedRecipes!!.numberOfRecipes())
             assertTrue(populatedRecipes!!.add(newRecipe))
             assertEquals(7, populatedRecipes!!.numberOfRecipes())
@@ -70,7 +70,7 @@ class RecipeAPITest {
         @Test
         fun `adding a Recipe to an empty list adds to ArrayList`() {
             val newRecipe =
-                Recipe("American -style Pancakes", "Breakfast", "flour,sugar,eggs,butter,milk", 1, 4, 5, false)
+                Recipe(0,"American -style Pancakes", "Breakfast",  1, 4, 5, false)
             assertEquals(0, emptyRecipes!!.numberOfRecipes())
             assertTrue(emptyRecipes!!.add(newRecipe))
             assertEquals(1, emptyRecipes!!.numberOfRecipes())
@@ -238,9 +238,9 @@ class RecipeAPITest {
     inner class UpdateNotes {
         @Test
         fun `updating a recipe that does not exist returns false`(){
-            assertFalse(populatedRecipes!!.updateRecipe(7, Recipe("Updating Recipe", "breakfast", "bread", 1,1,3,false)))
-            assertFalse(populatedRecipes!!.updateRecipe(-1, Recipe("Updating Recipe", "breakfast", "bread", 1,1,3,false)))
-            assertFalse(emptyRecipes!!.updateRecipe(0, Recipe("Updating Recipe", "breakfast", "bread",1, 1,3,false)))
+            assertFalse(populatedRecipes!!.updateRecipe(7, Recipe(7,"Updating Recipe", "breakfast",  1,1,3,false)))
+            assertFalse(populatedRecipes!!.updateRecipe(-1, Recipe(-1,"Updating Recipe", "breakfast", 1,1,3,false)))
+            assertFalse(emptyRecipes!!.updateRecipe(0, Recipe(0,"Updating Recipe", "breakfast", 1, 1,3,false)))
         }
 
         @Test
@@ -249,16 +249,14 @@ class RecipeAPITest {
             assertEquals(overnightOats, populatedRecipes!!.findRecipe(1))
             assertEquals("Overnight Oats", populatedRecipes!!.findRecipe(1)!!.recipeName)
             assertEquals("Breakfast", populatedRecipes!!.findRecipe(1)!!.recipeCategory)
-            assertEquals("oats,yoghurt,berries,honey,cinnamon", populatedRecipes!!.findRecipe(1)!!.ingredients)
             assertEquals(1, populatedRecipes!!.findRecipe(1)!!.difficultyLevel)
             assertEquals(1, populatedRecipes!!.findRecipe(1)!!.servingSize)
             assertEquals(4, populatedRecipes!!.findRecipe(1)!!.recipeRating)
 
             //update note 1 with new information and ensure contents updated successfully
-            assertTrue(populatedRecipes!!.updateRecipe(1, Recipe("Updating Recipe", "Lunch", "bread", 2,2,4,false)))
+            assertTrue(populatedRecipes!!.updateRecipe(1, Recipe(1,"Updating Recipe", "Lunch",  2,2,4,false)))
             assertEquals("Updating Recipe", populatedRecipes!!.findRecipe(1)!!.recipeName)
             assertEquals("Lunch", populatedRecipes!!.findRecipe(1)!!.recipeCategory)
-            assertEquals("bread", populatedRecipes!!.findRecipe(1)!!.ingredients)
             assertEquals(2, populatedRecipes!!.findRecipe(1)!!.difficultyLevel)
             assertEquals(2, populatedRecipes!!.findRecipe(1)!!.servingSize)
             assertEquals(4, populatedRecipes!!.findRecipe(1)!!.recipeRating)
