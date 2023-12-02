@@ -57,42 +57,18 @@ class RecipeAPI(serializerType: Serializer) {
         }
     }
 
-    fun numberOfRecipesByDifficultyLevel(difficultyLevel: Int): Int{
-        var counter = 0
-        for (recipe in recipes) {
-            if (recipe.difficultyLevel == difficultyLevel){
-                counter++
-            }
-        }
-        return counter
-    }
+    fun numberOfRecipesByDifficultyLevel(difficultyLevel: Int): Int =
+        recipes.count { d: Recipe -> d.difficultyLevel == difficultyLevel }
 
-    fun numberOfRecipesByRating(rating: Int): Int{
-        var counter = 0
-        for (recipe in recipes) {
-            if (recipe.recipeRating == rating){
-                counter++
-            }
-        }
-        return counter
-    }
+    fun numberOfRecipesByRating(rating: Int): Int =
+        recipes.count { r: Recipe -> r.recipeRating == rating }
     fun numberOfRecipes(): Int {
         return recipes.size
     }
 
-    fun numberOfRecipesInBook(): Int {
-        return recipes.stream()
-            .filter{recipe: Recipe -> recipe.recipeInBook}
-            .count()
-            .toInt()
-    }
+    fun numberOfRecipesInBook(): Int = recipes.count { recipe: Recipe -> recipe.recipeInBook }
 
-    fun numberOfRecipesNotInBook(): Int {
-        return recipes.stream()
-            .filter{recipe: Recipe -> !recipe.recipeInBook}
-            .count()
-            .toInt()
-    }
+    fun numberOfRecipesNotInBook(): Int = recipes.count { recipe: Recipe -> !recipe.recipeInBook }
 
     fun findRecipe(index: Int): Recipe? {
         return if (isValidListIndex(index, recipes)){
