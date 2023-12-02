@@ -175,6 +175,11 @@ class RecipeAPI(serializerType: Serializer) {
         return false
     }
 
+    fun searchByTitle(searchString : String) =
+        recipes.filter { recipe -> recipe.recipeName.contains(searchString, ignoreCase = true)}
+            .joinToString (separator = "\n") {
+                    recipe ->  recipes.indexOf(recipe).toString() + ": " + recipe.toString() }
+
     @Throws(Exception::class)
     fun load() {
         recipes = serializer.read() as ArrayList<Recipe>

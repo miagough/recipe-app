@@ -32,8 +32,10 @@ fun mainMenu() : Int {
          > |   4) Delete a recipe      |
          > |   5) Recipe Book          |
          > -----------------------------
-         > |  20) Save Recipes
-         > |  21) Load Recipes
+         > |   6) Search Recipes       |
+         > -----------------------------
+         > |  20) Save Recipes         |
+         > |  21) Load Recipes         |
          > |   0) Exit                 |
          > -----------------------------
          > ==>> """.trimMargin(">"))
@@ -50,6 +52,7 @@ fun runMenu() {
             3  -> updateRecipe()
             4  -> deleteRecipe()
             5  -> recipeInBook()
+            6  -> searchRecipes()
             20 -> save()
             21 -> load()
             0  -> exitApp()
@@ -175,6 +178,16 @@ fun recipeInBook() {
         } else {
             println("Recipe was NOT successfully added to Recipe Book")
         }
+    }
+}
+
+fun searchRecipes() {
+    val searchTitle = readNextLine("Enter the description to search by: ")
+    val searchResults = recipeAPI.searchByTitle(searchTitle)
+    if (searchResults.isEmpty()) {
+        println("No recipes found")
+    } else {
+        println(searchResults)
     }
 }
 

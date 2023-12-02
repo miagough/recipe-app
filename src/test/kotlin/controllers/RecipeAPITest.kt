@@ -400,4 +400,42 @@ class RecipeAPITest {
         }
     }
 
+    @Nested
+    inner class SearchMethods {
+
+        @Test
+        fun `search recipes by title returns no recipes when no recipes with that title exist`() {
+            //Searching a populated collection for a title that doesn't exist.
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+            val searchResults = populatedRecipes!!.searchByTitle("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.searchByTitle("").isEmpty())
+        }
+
+        @Test
+        fun `search recipes by title returns recipes when recipes with that title exist`() {
+            assertEquals(6, populatedRecipes!!.numberOfRecipes())
+
+            //Searching a populated collection for a full title that exists (case matches exactly)
+            var searchResults = populatedRecipes!!.searchByTitle("American -style Pancakes")
+            assertTrue(searchResults.contains("American -style Pancakes"))
+            assertFalse(searchResults.contains("Overnight Oats"))
+
+            //Searching a populated collection for a partial title that exists (case matches exactly)
+            searchResults = populatedRecipes!!.searchByTitle("g")
+            assertTrue(searchResults.contains("Overnight Oats"))
+            assertTrue(searchResults.contains("Lasagne"))
+            assertFalse(searchResults.contains("Pasta Bake"))
+
+            //Searching a populated collection for a partial title that exists (case doesn't match)
+            searchResults = populatedRecipes!!.searchByTitle("G")
+            assertTrue(searchResults.contains("Overnight Oats"))
+            assertTrue(searchResults.contains("Lasagne"))
+            assertFalse(searchResults.contains("Pasta Bake"))
+        }
+    }
+
 }
