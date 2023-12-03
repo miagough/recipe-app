@@ -2,6 +2,7 @@ package controllers
 
 import models.Recipe
 import persistence.Serializer
+import utils.Utilities.validRange
 
 class RecipeAPI(serializerType: Serializer) {
 
@@ -161,6 +162,10 @@ class RecipeAPI(serializerType: Serializer) {
             .joinToString(separator = "\n") { recipe ->
                 recipes.indexOf(recipe).toString() + ": " + recipe.toString()
             }
+
+    fun validRange(numberToCheck: Int, min: Int, max: Int): Boolean {
+        return numberToCheck in min..max
+    }
 
     @Throws(Exception::class)
     fun load() {
