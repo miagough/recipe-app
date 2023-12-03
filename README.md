@@ -16,6 +16,10 @@ This project allows users to:
 - Save notes
 - Load notes
 - Search notes based on description
+- Add ingredients to recipes
+- Update ingredients
+- Delete ingredients
+- Search by ingredients
 
 ## Getting Started
 This project is made using Kotlin. Therefore you must have Kotlin installed on your machine to be able to access it.
